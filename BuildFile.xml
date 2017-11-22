@@ -1,0 +1,13 @@
+<use name="root"/>
+<use name="rootmath"/>
+<use name="boost"/>
+<use name="rootrflx"/>
+<use name="FWCore/Framework"/>
+<use name="FWCore/FWLite"/>
+<use name="FWCore/Utilities"/>
+<use name="DataFormats/FWLite"/>
+<use name="DataFormats/Common"/>
+<use name="PhysicsTools/FWLite"/>
+<export>
+  <lib   name="1"/>
+</export>
