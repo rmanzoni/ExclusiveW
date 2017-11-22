@@ -24,6 +24,7 @@ from CMGTools.ExclusiveW.analyzers.TTBarWLNuWDsGammaAnalyzer     import TTBarWLN
 from CMGTools.ExclusiveW.analyzers.TTBarWLNuWDsGammaTreeProducer import TTBarWLNuWDsGammaTreeProducer
 from CMGTools.ExclusiveW.analyzers.LeptonSelector                import LeptonSelector
 from CMGTools.ExclusiveW.analyzers.JetSelector                   import JetSelector
+from CMGTools.ExclusiveW.analyzers.GammaSelector                 import GammaSelector
 
 # import samples, signal
 from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2 import TTJets_SingleLeptonFromTbar, TTJets_SingleLeptonFromTbar_ext, TTJets_SingleLeptonFromT, TTJets_SingleLeptonFromT_ext
@@ -123,13 +124,17 @@ treeProducer = cfg.Analyzer(
     name='TTBarWLNuWDsGammaTreeProducer',
 )
 
+photons = cfg.Analyzer(
+	GammaSelector	
+)
+
 # see SM HTT TWiki
 # https://twiki.cern.ch/twiki/bin/viewauth/CMS/SMTauTau2016#Jet_Energy_Corrections
 jetAna = cfg.Analyzer(
-    JetAnalyzer,
+    JetSelector,
     name              = 'JetAnalyzer',
     jetCol            = 'slimmedJets',
-		toClean           = 'tightLeptons',
+		toClean           = ['tightLeptons', 'gammas'],
     jerCorr           = False,
     puJetIDDisc       = 'pileupJetId:fullDiscriminant',
     recalibrateJets   = False, #True, #FIXME
@@ -156,6 +161,7 @@ sequence = cfg.Sequence([
     vertexAna,
     pileUpAna,
     leptons,
+		photons,
     jetAna,
     treeProducer,
 ])

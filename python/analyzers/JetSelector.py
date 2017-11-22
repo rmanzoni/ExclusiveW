@@ -17,9 +17,6 @@ from PhysicsTools.Heppy.physicsutils.JetReCalibrator import JetReCalibrator
 # in heppy and possibly add b-tagging in another step or add it to the generic
 # jet analyzer
 
-def pippo():
-	pass
-
 class JetSelector(Analyzer):
 	"""Analyze jets.
 
@@ -99,8 +96,7 @@ class JetSelector(Analyzer):
 		count.register('all events')
 		count.register('at least 2 good jets')
 		count.register('at least 2 clean jets')
-		count.register('at least 1 b jet')
-		count.register('at least 2 b jets')
+		count.register('exactly 2 b jets')
 
 	def process(self, event):
 
@@ -110,9 +106,10 @@ class JetSelector(Analyzer):
 
 		allJets = []
 
-		leptons = []
+		to_clean_against = []
 		if hasattr(self.cfg_ana, 'toClean'):
-			leptons = getattr(event, self.cfg_ana.toClean)
+			for collection in self.cfg_ana.toClean:
+				to_clean_against += getattr(event, collection)
 
 		genJets = None
 		if self.cfg_comp.isMC:
@@ -147,7 +144,7 @@ class JetSelector(Analyzer):
 				csv=jet.btag("pfCombinedInclusiveSecondaryVertexV2BJetTags"),
 				jetflavor=abs(jet.hadronFlavour()),
 				is_data=not self.cfg_comp.isMC,
-				csv_cut=csv_cut
+				csv_cut=0.800 #CSVM from https://twiki.cern.ch/twiki/bin/viewauth/CMS/BtagRecommendation80X
 				)
 			## if self.testJet(jet):
 			## 	event.jets.append(jet)
@@ -164,8 +161,8 @@ class JetSelector(Analyzer):
 		self.counters.counter('jets').inc('at least 2 good jets')
 
 		event.jets, dummy = cleanObjectCollection(
-			event.jets,
-			masks=leptons,
+			allJets,
+			masks=to_clean_against,
 			deltaRMin=0.5
 			)
 		if len(event.jets) < 2: return False

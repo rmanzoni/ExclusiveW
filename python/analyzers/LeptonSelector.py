@@ -64,11 +64,10 @@ class LeptonSelector(Analyzer):
 		
 		self.counters.counter('ExclusiveW').inc('> 0 vertex')
 
-				#TODO: put trigger requirements
+		#TODO: put trigger requirements
 		all_muons	  = self.buildMuons	(self.handles['muons'	].product(), event)
 		all_electrons  = self.buildElectrons(self.handles['electrons'].product(), event)
 		
-		set_trace()
 		tight_muons = []
 		veto_muons  = []
 		for mu in all_muons:
