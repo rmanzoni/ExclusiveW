@@ -25,6 +25,7 @@ from CMGTools.ExclusiveW.analyzers.TTBarWLNuWDsGammaTreeProducer import TTBarWLN
 from CMGTools.ExclusiveW.analyzers.LeptonSelector                import LeptonSelector
 from CMGTools.ExclusiveW.analyzers.JetSelector                   import JetSelector
 from CMGTools.ExclusiveW.analyzers.GammaSelector                 import GammaSelector
+from CMGTools.ExclusiveW.analyzers.LeptonicTopBuilder            import LeptonicTopBuilder
 
 # import samples, signal
 from CMGTools.RootTools.samples.samples_13TeV_RunIISummer16MiniAODv2 import TTJets_SingleLeptonFromTbar, TTJets_SingleLeptonFromTbar_ext, TTJets_SingleLeptonFromT, TTJets_SingleLeptonFromT_ext
@@ -144,6 +145,10 @@ jetAna = cfg.Analyzer(
     #jesCorr = 1., # Shift jet energy scale in terms of uncertainties (1 = +1 sigma)
 )
 
+leptonicTops = cfg.Analyzer(
+	LeptonicTopBuilder,
+	)
+
 fileCleaner = cfg.Analyzer(
     FileCleaner,
     name='FileCleaner'
@@ -163,7 +168,8 @@ sequence = cfg.Sequence([
     leptons,
 		photons,
     jetAna,
-    treeProducer,
+		leptonicTops,
+    #treeProducer,
 ])
 
 ###################################################
